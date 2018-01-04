@@ -1,4 +1,6 @@
-# AngularMapping
+# Assessment Map
+
+Currently just mucking around with Leaflet. Inspired by Jens von Bergmann's much nicer Vancouver assessment map.
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 1.6.3.
 
