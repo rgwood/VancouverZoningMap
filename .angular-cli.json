@@ -21,9 +21,9 @@
       "prefix": "app",
       "styles": [
         "styles.css",
-        "../node_modules/leaflet/dist/leaflet.css"
+        "../node_modules/mapbox-gl/dist/mapbox-gl.css"
       ],
-      "scripts": ["../node_modules/leaflet/dist/leaflet.js"],
+      "scripts": ["../node_modules/mapbox-gl/dist/mapbox-gl.js"],
       "environmentSource": "environments/environment.ts",
       "environments": {
         "dev": "environments/environment.ts",
