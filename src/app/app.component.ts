@@ -27,14 +27,14 @@ export class AppComponent {
     map.on('load', () => {
       map.addSource("parcels-source", {
         "type": "vector",
-        "tiles": ["http://localhost:7071/api/GetTile/{z}/{x}/{y}.mvt"]
+        "tiles": ["http://localhost:7071/api/GetTile/{x}/{y}/{z}/tile.mvt"]
       });
 
         map.addLayer({
                        "id": "random",
                        "type": "fill",
                        "source": "parcels-source",
-                       "source-layer": "parcels-source",
+                       "source-layer": "default",
                        "paint": {
                            "fill-color": "#3887be"
                        }});
