@@ -21,7 +21,7 @@ export class AppComponent {
       container: 'map',
       style: 'mapbox://styles/mapbox/streets-v9',
       center: [ -123.116226, 49.246292],
-      zoom: 13
+      zoom: 11
   });
 
     map.on('load', () => {
