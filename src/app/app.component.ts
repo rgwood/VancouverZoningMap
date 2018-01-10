@@ -27,7 +27,7 @@ export class AppComponent {
     map.on('load', () => {
       map.addSource("parcels-source", {
         "type": "vector",
-        "tiles": ["http://localhost:7071/api/GetTile/{x}/{y}/{z}/tile.mvt"]
+        "tiles": ["http://localhost:3000/mvt/{x}/{y}/{z}"]
       });
 
         map.addLayer({
@@ -38,6 +38,7 @@ export class AppComponent {
                        "paint": {
                            "fill-color": "#3887be"
                        }});
+        map.addControl(new mapboxgl.NavigationControl());
     });
 
 
