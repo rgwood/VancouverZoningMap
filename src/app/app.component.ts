@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Http } from '@angular/http';
 import  {} from 'mapbox-gl';
+import { LngLat } from 'mapbox-gl/dist/mapbox-gl';
 
 @Component({
   selector: 'app-root',
@@ -25,22 +26,36 @@ export class AppComponent {
   });
 
     map.on('load', () => {
-      map.addSource("parcels-source", {
+      map.addSource("parcelsSource", {
         "type": "vector",
-        "tiles": ["http://localhost:3000/mvt/{x}/{y}/{z}"]
+        "tiles": ["http://localhost:3000/mvt/{x}/{y}/{z}"],
+        "minzoom":11,
+        "maxzoom":11
       });
 
         map.addLayer({
-                       "id": "random",
+                       "id": "parcelLayer",
                        "type": "fill",
-                       "source": "parcels-source",
+                       "source": "parcelsSource",
                        "source-layer": "default",
                        "paint": {
-                           "fill-color": "#3887be"
+                           "fill-color": [
+                            "rgb",
+                            // red is higher when feature.properties.random is higher
+                            ["get", "random"],
+                            0,
+                            50
+                        ]
                        }});
         map.addControl(new mapboxgl.NavigationControl());
     });
 
+    map.on('click', 'parcelLayer', function (e) {
+      new mapboxgl.Popup()
+          .setLngLat(e.lngLat)
+          .setHTML(e.features[0].properties.streetname)
+          .addTo(map);
+  });
 
   // map.on('load', () => {
   //   map.addLayer({
