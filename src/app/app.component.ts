@@ -64,7 +64,7 @@ export class AppComponent {
     map.on('click', 'parcelLayer', function (e) {
       new mapboxgl.Popup()
         .setLngLat(e.lngLat)
-        .setHTML(`${e.features[0].properties.civic_no} ${e.features[0].properties.streetname}`)
+        .setHTML(e.features[0].properties.address)
         .addTo(map);
     });
 
