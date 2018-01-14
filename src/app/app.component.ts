@@ -58,21 +58,22 @@ export class AppComponent {
           ]
         }
       }, firstSymbolId);
+      
       map.addControl(new mapboxgl.NavigationControl());
+
+      map.on('click', 'parcelLayer', function (e) {
+        new mapboxgl.Popup()
+          .setLngLat(e.lngLat)
+          .setHTML(e.features[0].properties.address)
+          .addTo(map);
+      });
+
+      map.on('mousemove', function (e) {
+        var features = map.queryRenderedFeatures(e.point,{layers:["parcelLayer"]});
+        map.getCanvas().style.cursor = features.length ? 'pointer' : '';
     });
 
-    map.on('click', 'parcelLayer', function (e) {
-      new mapboxgl.Popup()
-        .setLngLat(e.lngLat)
-        .setHTML(e.features[0].properties.address)
-        .addTo(map);
     });
-
-    
-    map.on('mousemove', function (e) {
-      var features = map.queryRenderedFeatures(e.point,{layers:["parcelLayer"]});
-      map.getCanvas().style.cursor = features.length ? 'pointer' : '';
-  });
 
     // map.on('load', () => {
     //   map.addLayer({
