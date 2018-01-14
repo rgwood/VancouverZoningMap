@@ -22,17 +22,12 @@ export class AppComponent {
       container: 'map',
       style: 'mapbox://styles/mapbox/streets-v9',
       center: [-123.116226, 49.246292],
-      zoom: 11
+      zoom: 12
     });
+    map.addControl(new mapboxgl.NavigationControl());
 
     map.on('load', () => {
-      map.addSource("parcelsSource", {
-        "type": "vector",
-        "tiles": ["http://localhost:3000/parcels/{z}/{x}/{y}.pbf"],
-        "minzoom": 11,
-        "maxzoom": 15
-      });
-
+      
       let layers: mapboxgl.Layer[] = map.getStyle().layers;
       // Find the index of the first symbol layer in the map style
       let firstSymbolId: string;
@@ -42,8 +37,13 @@ export class AppComponent {
           break;
         }
       }
-
-      map.addLayer({
+      map.addSource("parcelsSource", {
+        "type": "vector",
+        "tiles": ["http://localhost:3000/parcels/{z}/{x}/{y}.pbf"],
+        "minzoom": 11,
+        "maxzoom": 15
+      })
+      .addLayer({
         "id": "parcelLayer",
         "type": "fill",
         "source": "parcelsSource",
@@ -51,24 +51,20 @@ export class AppComponent {
         "paint": {
           "fill-color": [
             "rgb",
-            //["get", "random"],
-            30,
+            ["/", ["get", "area_sq_metres"],1000],
+            //30,
             0,
             50
           ]
         }
-      }, firstSymbolId);
-      
-      map.addControl(new mapboxgl.NavigationControl());
-
-      map.on('click', 'parcelLayer', function (e) {
+      }, firstSymbolId)
+      .on('click', 'parcelLayer', function (e) {
         new mapboxgl.Popup()
           .setLngLat(e.lngLat)
-          .setHTML(e.features[0].properties.address)
+          .setHTML(`${e.features[0].properties.address}<br>${e.features[0].properties.area_sq_metres} m^2`)
           .addTo(map);
-      });
-
-      map.on('mousemove', function (e) {
+      })
+      .on('mousemove', function (e) {
         var features = map.queryRenderedFeatures(e.point,{layers:["parcelLayer"]});
         map.getCanvas().style.cursor = features.length ? 'pointer' : '';
     });
