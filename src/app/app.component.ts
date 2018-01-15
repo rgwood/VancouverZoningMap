@@ -27,7 +27,7 @@ export class AppComponent {
     map.addControl(new mapboxgl.NavigationControl());
 
     map.on('load', () => {
-      
+
       let layers: mapboxgl.Layer[] = map.getStyle().layers;
       // Find the index of the first symbol layer in the map style
       let firstSymbolId: string;
@@ -40,34 +40,41 @@ export class AppComponent {
       map.addSource("parcelsSource", {
         "type": "vector",
         "tiles": ["http://localhost:3000/parcels/{z}/{x}/{y}.pbf"],
-        "minzoom": 11,
+        "minzoom": 9,
         "maxzoom": 15
       })
-      .addLayer({
-        "id": "parcelLayer",
-        "type": "fill",
-        "source": "parcelsSource",
-        "source-layer": "default",
-        "paint": {
-          "fill-color": [
-            "rgb",
-            ["/", ["get", "area_sq_metres"],1000],
-            //30,
-            0,
-            50
-          ]
-        }
-      }, firstSymbolId)
-      .on('click', 'parcelLayer', function (e) {
-        new mapboxgl.Popup()
-          .setLngLat(e.lngLat)
-          .setHTML(`${e.features[0].properties.address}<br>${e.features[0].properties.area_sq_metres} m^2`)
-          .addTo(map);
-      })
-      .on('mousemove', function (e) {
-        var features = map.queryRenderedFeatures(e.point,{layers:["parcelLayer"]});
-        map.getCanvas().style.cursor = features.length ? 'pointer' : '';
-    });
+        .addLayer({
+          "id": "parcelLayer",
+          "type": "fill",
+          "source": "parcelsSource",
+          "source-layer": "default",
+          "paint": {
+            "fill-color": [
+              "rgb",
+              //red is 255 for buildings built in 2018, less for older buildings
+              ["-", 255,
+                ["*", 2,
+                  ["-", 2018, ["get", "year_built"]], //age
+                ]
+              ],
+              70,
+              70
+            ]
+          }
+        }, firstSymbolId)
+        .on('click', 'parcelLayer', function (e) {
+          new mapboxgl.Popup()
+            .setLngLat(e.lngLat)
+            .setHTML(`${e.features[0].properties.address}<br>
+                      ${e.features[0].properties.area_sq_metres} m^2<br>
+                      Built in ${e.features[0].properties.year_built}.<br>
+                      Zoning: ${e.features[0].properties.zone_name}`)
+            .addTo(map);
+        })
+        .on('mousemove', function (e) {
+          var features = map.queryRenderedFeatures(e.point, { layers: ["parcelLayer"] });
+          map.getCanvas().style.cursor = features.length ? 'pointer' : '';
+        });
 
     });
 
