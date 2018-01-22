@@ -39,7 +39,9 @@ export class AppComponent {
       }
       map.addSource("parcelsSource", {
         "type": "vector",
-        "tiles": ["http://localhost:3000/parcels/{z}/{x}/{y}.pbf"],
+        "tiles": ["https://gentle-brushlands-12605.herokuapp.com/parcels/{z}/{x}/{y}.pbf"],
+        //"tiles": ["http://localhost:3000/parcels/{z}/{x}/{y}.pbf"],
+        //"url": "mapbox://gridsvancouver.51cxjj80",
         "minzoom": 9,
         "maxzoom": 15
       })
@@ -51,14 +53,15 @@ export class AppComponent {
           "paint": {
             "fill-color": [
               "rgb",
-              //red is 255 for buildings built in 2018, less for older buildings
+
+              70,
+              70,
+              //blue is 255 for buildings built in 2018, less for older buildings
               ["-", 255,
                 ["*", 2,
                   ["-", 2018, ["get", "year_built"]], //age
                 ]
-              ],
-              70,
-              70
+              ]
             ]
           }
         }, firstSymbolId)
