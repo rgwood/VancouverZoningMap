@@ -24,6 +24,13 @@ export class AppComponent {
       center: [-123.116226, 49.246292],
       zoom: 12
     });
+
+    map.addControl(new mapboxgl.GeolocateControl({
+      positionOptions: {
+          enableHighAccuracy: true
+      },
+      trackUserLocation: true
+  }));
     map.addControl(new mapboxgl.NavigationControl());
 
     map.on('load', () => {
