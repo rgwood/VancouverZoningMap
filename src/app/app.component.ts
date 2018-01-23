@@ -69,7 +69,7 @@ export class AppComponent {
           new mapboxgl.Popup()
             .setLngLat(e.lngLat)
             .setHTML(`${e.features[0].properties.address}<br>
-                      ${e.features[0].properties.area_sq_metres} m^2<br>
+                      ${e.features[0].properties.area_sq_m.toLocaleString('en-us')} m<sup>2</sup><br>
                       Built in ${e.features[0].properties.year_built}.<br>
                       Zoning: ${e.features[0].properties.zone_name}`)
             .addTo(map);
