@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve --ssl --ssl-key devKey.pem --ssl-cert devCert.pem",
     "build": "ng build --target=production --output-hashing none",
     "test": "ng test",
     "lint": "ng lint",
@@ -25,6 +25,7 @@
     "@types/mapbox-gl": "^0.42.0",
     "core-js": "^2.4.1",
     "mapbox-gl": "^0.43.0",
+    "mapbox-gl-toggle-control": "^1.0.5",
     "rxjs": "^5.5.2",
     "zone.js": "^0.8.14"
   },
