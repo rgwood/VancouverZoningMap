@@ -55,7 +55,7 @@ export class AppComponent {
         "tiles": ["https://gentle-brushlands-12605.herokuapp.com/parcels/{z}/{x}/{y}.pbf"],
         //"tiles": ["http://localhost:3000/parcels/{z}/{x}/{y}.pbf"],
         //"url": "mapbox://gridsvancouver.51cxjj80",
-        "minzoom": 9,
+        "minzoom": 8,
         "maxzoom": 15
       })
         .addLayer({
