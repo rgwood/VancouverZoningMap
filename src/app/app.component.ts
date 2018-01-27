@@ -34,6 +34,7 @@ export class AppComponent {
       },
       trackUserLocation: true
   }));
+  //todo: hide navigation control on mobile because two-finger zoom/rotate is better
     map.addControl(new mapboxgl.NavigationControl());
     map.on('load', () => {
 
@@ -55,7 +56,7 @@ export class AppComponent {
         "tiles": ["https://gentle-brushlands-12605.herokuapp.com/parcels/{z}/{x}/{y}.pbf"],
         //"tiles": ["http://localhost:3000/parcels/{z}/{x}/{y}.pbf"],
         //"url": "mapbox://gridsvancouver.51cxjj80",
-        "minzoom": 8,
+        "minzoom": 6,
         "maxzoom": 15
       })
         .addLayer({
