@@ -33,6 +33,7 @@
 npm-debug.log
 testem.log
 /typings
+netlify.toml
 
 # e2e
 /e2e/*.js
@@ -44,3 +45,4 @@ Thumbs.db
 
 # Keys
 *.pem
+
