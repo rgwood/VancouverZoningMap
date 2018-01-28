@@ -1,23 +1,20 @@
 import { Component } from '@angular/core';
 import { Http } from '@angular/http';
 import { } from 'mapbox-gl';
-import { LngLat } from 'mapbox-gl/dist/mapbox-gl';
-import { ToggleControl } from 'mapbox-gl-toggle-control';
+import { LngLat, Control } from 'mapbox-gl/dist/mapbox-gl';
+import {CustomMapboxControl} from './CustomMapboxControl';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
 
-  legendDisplayStyle: string = "none"; 
+export class AppComponent {
+  legendDisplayStyle: string = "";
 
   constructor(private http: Http) { }
 
   ngOnInit(): void {
-    console.log();
-    console.log(document);
-
     mapboxgl.accessToken = "pk.eyJ1IjoiZ3JpZHN2YW5jb3V2ZXIiLCJhIjoiY2pjM3poNHBuMThqNTJ3cGZ2ZnZhbzd3OCJ9.-u65hk-BENoC1ZvnLEsH6Q";
 
     var map = new mapboxgl.Map({
@@ -36,11 +33,11 @@ export class AppComponent {
   }));
   //todo: hide navigation control on mobile because two-finger zoom/rotate is better
     map.addControl(new mapboxgl.NavigationControl());
+    var customControl = new CustomMapboxControl( () => this.toggleLegendVisibility());
+    map.addControl(customControl);
+
     map.on('load', () => {
 
-      //todo: fix. Currently not working because querySelector can't get the #legend element
-      //var toggle = new ToggleControl(document.querySelector('#legend'))
-      //map.addControl(toggle, 'top-left')
 
       let layers: mapboxgl.Layer[] = map.getStyle().layers;
       // Find the index of the first symbol layer in the map style
@@ -102,25 +99,14 @@ export class AppComponent {
           map.getCanvas().style.cursor = features.length ? 'pointer' : '';
         });
     });
+  }
 
-    // map.on('load', () => {
-    //   map.addLayer({
-    //     "id": "terrain-data",
-    //     "type": "line",
-    //     "source": {
-    //         type: 'vector',
-    //         url: 'https://vector.mapzen.com/osm/all/{z}/{x}/{y}.mvt'
-    //         //url: 'http://localhost:7071/api/GetTile/{z}/{x}/{y}.mvt'
-    //     },
-    //     "source-layer": "contour",
-    //     "layout": {
-    //         "line-join": "round",
-    //         "line-cap": "round"
-    //     },
-    //     "paint": {
-    //         "line-color": "#ff69b4",
-    //         "line-width": 1
-    //     }
-    // });
+  toggleLegendVisibility(): void {
+    if(this.legendDisplayStyle == ''){
+      this.legendDisplayStyle = 'none'
+    }
+    else{
+      this.legendDisplayStyle = '';
+    }
   }
 }
