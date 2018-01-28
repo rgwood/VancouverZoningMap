@@ -6,9 +6,8 @@ html, body {
 body { padding: 0; }
 
 .mapboxgl-ctrl-custom {
-    /*background-image: url(/icons/custom-mapbox-control.svg);*/
-    
-    background-color: #fff;
+    background-image: url(/assets/listIcon.svg);
+    background-color: rgb(255, 255, 255);
     background-repeat: no-repeat;
     background-size: 20px;
     background-position: center;

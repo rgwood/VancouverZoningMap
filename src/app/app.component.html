@@ -1,6 +1,12 @@
-<div id="map"></div>
+<div id="map">
+    <!--A hack to add attribution info, from https://stackoverflow.com/a/44786560/854694 -->
+    <!-- Modify the style: right position so it matches with the mapbox attribution -->
+    <div id="attribution" class="mapboxgl-ctrl mapboxgl-ctrl-attrib mapboxgl-ctrl-bottom-right" style="position: fixed; bottom: 0; right: 273px;">
+      <strong><a href="*">Acknowledgments</a></strong> &nbsp;
+  </div>
+</div>
 <div id='legend' class='legend' [ngStyle]="{ 'display': legendDisplayStyle }">
-        <h4>Population</h4>
-        <div><span style='background-color: #F2F12D'></span>Residential land that does not allow apartments</div>
-        <div><span style='background-color: #1e46e6'></span>Everything else</div>
+        <h4>Zoning in Vancouver</h4>
+        <div><span style='background-color: #F2F12D'></span>Residential but no apartments allowed</div>
+        <div><span style='background-color: #1e46e6'></span>Everything else (including non-residential)</div>
   </div>

@@ -21,7 +21,7 @@ export class CustomMapboxControl extends Evented {
       this.button.type = 'button';
       this.button.className = 'mapboxgl-ctrl-icon mapboxgl-ctrl-custom';
       this.button.onclick = () => this.onClickFunction();
-      this.button.innerText = 'i';
+      //this.button.innerText = '';
       this.container.appendChild(this.button);
 
       return this.container;
