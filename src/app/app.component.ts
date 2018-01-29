@@ -11,7 +11,6 @@ import {CustomMapboxControl} from './CustomMapboxControl';
 
 export class AppComponent {
   legendDisplayStyle: string = "";
-
   constructor(private http: Http) { }
 
   ngOnInit(): void {
@@ -84,12 +83,14 @@ export class AppComponent {
           }
         }, firstSymbolId)
         .on('click', 'parcelLayer', function (e) {
-          console.log(e.features);
+          let areaInSqMetres = Number(e.features[0].properties.area_sq_m);
+          let areaInSqFt: number =Math.round(areaInSqMetres * 10.76391); //square feet in 1 sq m
           new mapboxgl.Popup()
             .setLngLat(e.lngLat)
             .setHTML(`<strong>${e.features[0].properties.address}</strong><br>
                       Zoning: ${e.features[0].properties.zone_name || 'Unknown'} (<a href='TODO' target='_blank'>details</a>)<br>
-                      Area: ${e.features[0].properties.area_sq_m.toLocaleString('en-us')} m<sup>2</sup><br>
+                      Area: ${areaInSqMetres.toLocaleString('en-us')} m<sup>2</sup> 
+                           (${areaInSqFt.toLocaleString('en-us')} ft<sup>2</sup>)<br>
                       Built in: ${ e.features[0].properties.year_built || 'N/A' }`)
             .addTo(map);
         })
