@@ -87,11 +87,10 @@ export class AppComponent {
           console.log(e.features);
           new mapboxgl.Popup()
             .setLngLat(e.lngLat)
-            .setHTML(`${e.features[0].properties.address}<br>
-                      ${e.features[0].properties.area_sq_m.toLocaleString('en-us')} m<sup>2</sup><br>
-                      Built in ${e.features[0].properties.year_built}.<br>
-                      Zoning: ${e.features[0].properties.zone_name}<br>
-                      SFH only: ${e.features[0].properties.sfh_only}`)
+            .setHTML(`<strong>${e.features[0].properties.address}</strong><br>
+                      Zoning: ${e.features[0].properties.zone_name || 'Unknown'} (<a href='TODO' target='_blank'>details</a>)<br>
+                      Area: ${e.features[0].properties.area_sq_m.toLocaleString('en-us')} m<sup>2</sup><br>
+                      Built in: ${ e.features[0].properties.year_built || 'N/A' }`)
             .addTo(map);
         })
         .on('mousemove', function (e) {
