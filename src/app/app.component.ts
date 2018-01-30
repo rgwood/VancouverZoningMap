@@ -3,6 +3,7 @@ import { Http } from '@angular/http';
 import { } from 'mapbox-gl';
 import { LngLat, Control } from 'mapbox-gl/dist/mapbox-gl';
 import { CustomMapboxControl } from './CustomMapboxControl';
+import { ZoningCodeDescriptor } from './ZoningCodeDescriptor';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -74,15 +75,18 @@ export class AppComponent {
         .on('click', 'parcelLayer', function (e) {
           let areaInSqMetres = Number(e.features[0].properties.area_sq_m);
           let areaInSqFt: number = Math.round(areaInSqMetres * 10.76391); //square feet in 1 sq m
+          let zoneCode: string = e.features[0].properties.zone_name;
+          //todo: retrieve zone name and page from service
+          let zoningCodeDescriptor = AppComponent.getZoningCodeDescriptor(zoneCode);
           new mapboxgl.Popup()
             .setLngLat(e.lngLat)
             //I do not like that I'm building HTML manually here, but prerendering an Angular component seems fairly unpleasant these days.
             //Revisit this if the popup gets more complex
             .setHTML(`<strong>${e.features[0].properties.address}</strong><br>
-                      Zoning: ${e.features[0].properties.zone_name || 'Unknown'} (<a href='TODO' target='_blank'>details</a>)<br>
+                      Zoning: <a href='https://www.reillywood.com/vanmap/${zoningCodeDescriptor.RelativeURL}' target='_blank'>${zoningCodeDescriptor.Name}, ${zoneCode || 'Unknown'}</a><br>
                       Area: ${areaInSqMetres.toLocaleString('en-us')} m<sup>2</sup> 
                            (${areaInSqFt.toLocaleString('en-us')} ft<sup>2</sup>)<br>
-                      Built in: ${ e.features[0].properties.year_built || 'N/A'}`)
+                      Built in ${ e.features[0].properties.year_built || 'N/A'}`)
             .addTo(map);
         })
         .on('mousemove', function (e) {
@@ -99,5 +103,52 @@ export class AppComponent {
     else {
       this.legendDisplayStyle = '';
     }
+  }
+
+  static getZoningCodeDescriptor(code:string): ZoningCodeDescriptor{
+    //This is obviously horrendous. But! I don't want to store redundant info in the tileset,
+    //and the set of high-level zoning districts almost never changes. Better this than spending time 
+    //on a gold-plated solution.
+    
+    let upperCaseCode = code.toUpperCase();
+    
+    if (upperCaseCode == "BCPED")
+      return new ZoningCodeDescriptor("B.C. Place/Expo", "special");
+    if (upperCaseCode.startsWith("C-"))
+      return new ZoningCodeDescriptor("Commercial", "commercial");
+    if (upperCaseCode.startsWith("CD-1"))
+      return new ZoningCodeDescriptor("Comprehensive Development", "comprehensivedevelopment");
+    if (upperCaseCode == "CWD")
+      return new ZoningCodeDescriptor("Central Waterfront", "special");
+    if (upperCaseCode == "DD")
+      return new ZoningCodeDescriptor("Downtown", "special");
+    if (upperCaseCode == "DEOD")
+      return new ZoningCodeDescriptor("Downtown-Eastside/Oppenheimer", "special");
+    if (upperCaseCode == "FC-1")
+      return new ZoningCodeDescriptor("East False Creek", "special");
+    if (upperCaseCode == "FCCDD")
+      return new ZoningCodeDescriptor("False Creek Comprehensive Development", "comprehensivedevelopment");
+    if (upperCaseCode == "FM-1")
+      return new ZoningCodeDescriptor("Fairview", "special");
+    if (upperCaseCode == "FSD")
+      return new ZoningCodeDescriptor("First Shaughnessy", "shaughnessy");
+    if (upperCaseCode.startsWith("HA-"))
+      return new ZoningCodeDescriptor("Historic Area", "special");
+    if (upperCaseCode.startsWith("I-") || upperCaseCode.startsWith("IC-"))
+      return new ZoningCodeDescriptor("Light Industrial", "industrial");
+    if (upperCaseCode.startsWith("M-"))
+      return new ZoningCodeDescriptor("Industrial", "industrial");
+    if (upperCaseCode.startsWith("MC-"))
+      return new ZoningCodeDescriptor("Light Industrial Mixed Use", "industrial");
+    if (upperCaseCode.startsWith("RA-"))
+      return new ZoningCodeDescriptor("Limited Agriculture", "special");
+    if (upperCaseCode.startsWith("RM-"))
+      return new ZoningCodeDescriptor("Multiple Dwelling", "multipledwelling");
+    if (upperCaseCode.startsWith("RS-"))
+      return new ZoningCodeDescriptor("One-Family Dwelling", "rs");
+    if (upperCaseCode.startsWith("RT-"))
+      return new ZoningCodeDescriptor("Two-Family Dwelling", "rt");
+
+    throw new Error(`Zoning code '${code}' not found`);
   }
 }
