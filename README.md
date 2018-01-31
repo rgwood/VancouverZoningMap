@@ -1,6 +1,6 @@
 # Vancouver Zoning Map - Work In Progress
 
-The client side of a map of all Vancouver properties, using Mapbox GL JS. [Live version here](http://vanmap.reillywood.com).
+The client side of a map of all Vancouver properties. [Live version here](http://vanmap.reillywood.com).
 
 ## Technical deets
 
