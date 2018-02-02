@@ -38,7 +38,6 @@ export class AppComponent {
 
     map.on('load', () => {
 
-
       let layers: mapboxgl.Layer[] = map.getStyle().layers;
       // Find the index of the first symbol layer in the map style
       let firstSymbolId: string;
@@ -52,7 +51,7 @@ export class AppComponent {
         "type": "vector",
         "tiles": ["https://gentle-brushlands-12605.herokuapp.com/parcels/{z}/{x}/{y}.pbf"],
         //"tiles": ["http://localhost:3000/parcels/{z}/{x}/{y}.pbf"],
-        //"url": "mapbox://gridsvancouver.51cxjj80",
+        //"url": "mapbox://gridsvancouver.ad1dvrj5"//,
         "minzoom": 6,
         "maxzoom": 15
       })
