@@ -19,7 +19,7 @@ export class AppComponent {
 
     var map = new mapboxgl.Map({
       container: 'map',
-      style: 'mapbox://styles/mapbox/dark-v9',
+      style: 'mapbox://styles/gridsvancouver/cjde34e8s1gg62rmuz70qvb2j',
       center: [-123.116226, 49.246292],
       zoom: 12
     });
