@@ -17,11 +17,27 @@ export class AppComponent {
   ngOnInit(): void {
     mapboxgl.accessToken = "pk.eyJ1IjoiZ3JpZHN2YW5jb3V2ZXIiLCJhIjoiY2pjM3poNHBuMThqNTJ3cGZ2ZnZhbzd3OCJ9.-u65hk-BENoC1ZvnLEsH6Q";
 
+    //defaults
+    let initLng = -123.116226;
+    let initLat = 49.246292;
+    let initZoom = 12;
+
+    let queryParams = this.getQueryParams(location.search);
+    let qpLng = Number(queryParams['lng']);
+    let qpLat = Number(queryParams['lat']);
+    let qpZoom = Number(queryParams['zoom']);
+
+    if(!Number.isNaN(qpLat) && !Number.isNaN(qpLng) && !Number.isNaN(qpZoom)){
+      initLat = qpLat;
+      initLng = qpLng;
+      initZoom = qpZoom;
+    }
+    
     var map = new mapboxgl.Map({
       container: 'map',
       style: 'mapbox://styles/gridsvancouver/cjde34e8s1gg62rmuz70qvb2j',
-      center: [-123.116226, 49.246292],
-      zoom: 12
+      center: [initLng, initLat],
+      zoom: initZoom
     });
 
     map.addControl(new mapboxgl.GeolocateControl({
@@ -79,7 +95,7 @@ export class AppComponent {
           let zoningCodeDescriptor = AppComponent.getZoningCodeDescriptor(zoneCode);
           new mapboxgl.Popup()
             .setLngLat(e.lngLat)
-            //I do not like that I'm building HTML manually here, but prerendering an Angular component seems fairly unpleasant these days.
+            //I do NOT like that I'm building HTML manually here, but prerendering an Angular component seems fairly unpleasant these days.
             //Revisit this if the popup gets more complex
             .setHTML(`<strong>${e.features[0].properties.address}</strong><br>
                       Zoning: <a href='https://www.reillywood.com/vanmap/${zoningCodeDescriptor.RelativeURL}' target='_blank'>${zoningCodeDescriptor.Name}, ${zoneCode || 'Unknown'}</a><br>
@@ -91,6 +107,10 @@ export class AppComponent {
         .on('mousemove', function (e) {
           var features = map.queryRenderedFeatures(e.point, { layers: ["parcelLayer"] });
           map.getCanvas().style.cursor = features.length ? 'pointer' : '';
+        })
+        .on('moveend', function (e) {
+          let centre = map.getCenter();
+          history.pushState(null, "page 2", `?lat=${centre.lat}&lng=${centre.lng}&zoom=${map.getZoom()}`);
         });
     });
   }
@@ -149,5 +169,72 @@ export class AppComponent {
       return new ZoningCodeDescriptor("Two-Family Dwelling", "rt");
 
     throw new Error(`Zoning code '${code}' not found`);
+  }
+
+  getQueryParams(qs: string): {} {
+    // polyfill for IE
+    // https://tc39.github.io/ecma262/#sec-array.prototype.includes
+    if (!Array.prototype.includes) {
+      Object.defineProperty(Array.prototype, 'includes', {
+        value: function (searchElement, fromIndex) {
+
+          // 1. Let O be ? ToObject(this value).
+          if (this == null) {
+            throw new TypeError('"this" is null or not defined');
+          }
+
+          const o = Object(this);
+
+          // 2. Let len be ? ToLength(? Get(O, "length")).
+          const len = o.length >>> 0;
+
+          // 3. If len is 0, return false.
+          if (len === 0) {
+            return false;
+          }
+
+          // 4. Let n be ? ToInteger(fromIndex).
+          //    (If fromIndex is undefined, this step produces the value 0.)
+          const n = fromIndex | 0;
+
+          // 5. If n ≥ 0, then
+          //  a. Let k be n.
+          // 6. Else n < 0,
+          //  a. Let k be len + n.
+          //  b. If k < 0, let k be 0.
+          let k = Math.max(n >= 0 ? n : len - Math.abs(n), 0);
+
+          function sameValueZero(x, y) {
+            return x === y || (typeof x === 'number' && typeof y === 'number' && isNaN(x) && isNaN(y));
+          }
+
+          // 7. Repeat, while k < len
+          while (k < len) {
+            // a. Let elementK be the result of ? Get(O, ! ToString(k)).
+            // b. If SameValueZero(searchElement, elementK) is true, return true.
+            // c. Increase k by 1.
+            if (sameValueZero(o[k], searchElement)) {
+              return true;
+            }
+            k++;
+          }
+
+          // 8. Return false
+          return false;
+        }
+      });
+    }
+
+    qs = qs.split('+').join(' ');
+
+    let params = {},
+      tokens,
+      re = /[?&]?([^=]+)=([^&]*)/g;
+
+    while (tokens = re.exec(qs)) {
+      params[decodeURIComponent(tokens[1])] = decodeURIComponent(tokens[2]);
+    }
+
+    return params;
   }
 }
