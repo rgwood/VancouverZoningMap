@@ -12,6 +12,7 @@ import { ZoningCodeDescriptor } from './ZoningCodeDescriptor';
 
 export class AppComponent {
   legendDisplayStyle: string = "";
+  legendToggleControl : CustomMapboxControl;
   constructor(private http: Http) { }
 
   ngOnInit(): void {
@@ -32,7 +33,7 @@ export class AppComponent {
       initLng = qpLng;
       initZoom = qpZoom;
     }
-    
+
     var map = new mapboxgl.Map({
       container: 'map',
       style: 'mapbox://styles/gridsvancouver/cjde34e8s1gg62rmuz70qvb2j',
@@ -49,8 +50,8 @@ export class AppComponent {
     }));
     //todo: hide navigation control on mobile because two-finger zoom/rotate is better
     map.addControl(new mapboxgl.NavigationControl());
-    var customControl = new CustomMapboxControl(() => this.toggleLegendVisibility());
-    map.addControl(customControl);
+    this.legendToggleControl = new CustomMapboxControl(false, () => this.toggleLegendVisibility());
+    map.addControl(this.legendToggleControl);
 
     map.on('load', () => {
 
@@ -118,9 +119,11 @@ export class AppComponent {
   toggleLegendVisibility(): void {
     if (this.legendDisplayStyle == '') {
       this.legendDisplayStyle = 'none'
+      this.legendToggleControl.show();
     }
     else {
       this.legendDisplayStyle = '';
+      this.legendToggleControl.hide();
     }
   }
 

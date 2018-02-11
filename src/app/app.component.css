@@ -24,3 +24,30 @@
     margin-right: 5px;
     width: 10px;
 }
+
+#closeLegendButton {
+    position: absolute;
+    top:2px;
+    right:4px;
+    color: dimgray;
+    cursor: pointer;
+}
+
+svg {
+    cursor: pointer;
+    height: 15px;
+    width: 15px;
+}
+svg > circle {
+    stroke: dimgray;
+    fill: white;
+}
+svg > path {
+    stroke: dimgray;
+}
+svg:hover > circle {
+    fill: red;
+}
+svg:hover > path {
+    stroke: white;
+}
