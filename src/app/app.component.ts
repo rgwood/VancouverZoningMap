@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Http } from '@angular/http';
-import { } from 'mapbox-gl';
+import { MapMouseEvent } from 'mapbox-gl';
 import { LngLat, Control } from 'mapbox-gl/dist/mapbox-gl';
 import { CustomMapboxControl } from './CustomMapboxControl';
 import { ZoningCodeDescriptor } from './ZoningCodeDescriptor';
@@ -67,6 +67,7 @@ export class AppComponent {
       map.addSource("parcelsSource", {
         "type": "vector",
         "tiles": ["https://gentle-brushlands-12605.herokuapp.com/parcels/{z}/{x}/{y}.pbf"],
+        //"tiles": ["http://localhost:59080/api/tiles/{z}/{x}/{y}.pbf"],
         //"tiles": ["http://localhost:3000/parcels/{z}/{x}/{y}.pbf"],
         //"url": "mapbox://gridsvancouver.ad1dvrj5"//,
         "minzoom": 6,
@@ -105,11 +106,11 @@ export class AppComponent {
                       Built in ${ e.features[0].properties.year_built || 'N/A'}`)
             .addTo(map);
         })
-        .on('mousemove', function (e) {
+        .on('mousemove', function (e: MapMouseEvent) {
           var features = map.queryRenderedFeatures(e.point, { layers: ["parcelLayer"] });
           map.getCanvas().style.cursor = features.length ? 'pointer' : '';
         })
-        .on('moveend', function (e) {
+        .on('moveend', function (e: DragEvent) {
           let centre = map.getCenter();
           history.pushState(null, "page 2", `?lat=${centre.lat}&lng=${centre.lng}&zoom=${map.getZoom()}`);
         });

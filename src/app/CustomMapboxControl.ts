@@ -1,4 +1,4 @@
-import { IControl, Evented } from 'mapbox-gl/dist/mapbox-gl';
+import { IControl, Evented, Map } from 'mapbox-gl/dist/mapbox-gl';
 
 export class CustomMapboxControl extends Evented {
 
@@ -15,7 +15,7 @@ export class CustomMapboxControl extends Evented {
       this.onClickFunction = onClickFunction;
     }
   
-    onAdd(map){
+    onAdd(map: Map){
       this.map = map;
       this.container = document.createElement('div');
       this.container.className = 'mapboxgl-ctrl mapboxgl-ctrl-group';
