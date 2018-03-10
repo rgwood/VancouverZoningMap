@@ -1,6 +1,6 @@
 # Vancouver Zoning Map - Work In Progress
 
-The client side of a map of all Vancouver properties. [Live version here](http://vanmap.reillywood.com).
+The client side of a map of all Vancouver properties. [Live version here](http://vanmap.reillywood.com) (give it 15 seconds if the map doesn't show up right away, it's running on a free Heroku instance).
 
 ## Technical deets
 
